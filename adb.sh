@@ -3,7 +3,7 @@
 set -e
 set -u
 
-if [ $# -lt 1 ]
+if [[ $# -lt 1 ]]
 then
     echo "example: $0 应用包名"
     exit
@@ -11,10 +11,15 @@ fi
 
 app_package=$1
 
-#adb logcat -v threadtime | grep -F "`adb shell ps | grep 应用包名 | cut -c10-15`"
+# ~$ adb shell ps | grep com.tencent.mobileqq
+# u0_a226   8260  476   1693044 171788 SyS_epoll_ 0000000000 S com.tencent.mobileqq
+# u0_a226   8437  476   1615724 99772 SyS_epoll_ 0000000000 S com.tencent.mobileqq:MSF
+
+# adb logcat -v threadtime | grep -F "`adb shell ps | grep 应用包名 | awk '{print $2}'`"
+#example: adb logcat -v threadtime | grep -F "`adb shell ps | grep com.tencent.mobileqq | awk '{print $2}'`"
 function app_log(){
-    shell1="`adb shell ps | grep ${app_package} | cut -c10-15`"
-    process=${shell1}
+    shell="`adb shell ps | grep ${app_package} | awk '{print $2}'`"
+    process=${shell}
     result=""
     for element in ${process}
     do
@@ -22,9 +27,11 @@ function app_log(){
        result="${result}${element}|"
     done
     #去掉最后一个竖杠
-    result="${result%?}"
-    shell2="adb shell logcat -v threadtime | grep -E \"${result}\""
-    echo ${shell2}
+#    result="${result%?}"
+#    adb shell logcat -v threadtime | grep -E ${result}
+
+    # --colour=always 增加高亮着色
+    adb shell logcat -v threadtime | grep --colour=always -F "`adb shell ps | grep ${app_package} | awk '{print $2}'`"
 }
 
 function input(){
