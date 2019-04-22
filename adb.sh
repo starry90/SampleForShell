@@ -39,7 +39,12 @@ function app_version(){
 }
 
 function app_path(){
-    adb shell pm path ${app_package} | awk -F ":" '{print $2}'
+    app_path=`adb shell pm path ${app_package} | awk -F ":" '{print $2}'`
+    echo ${app_path}
+    #有的手机无法直接从/data/目录下pull文件，故先复制到sd卡下再pull
+    adb shell cp ${app_path} /sdcard/${app_package}.apk
+    adb pull /sdcard/${app_package}.apk ./
+    adb shell rm /sdcard/${app_package}.apk
 }
 
 function app_top_activity(){
@@ -60,7 +65,7 @@ function adb_finish(){
 function action(){
     while true
     do
-        echo "[1:应用日志信息] [2:应用版本信息]  [3:应用apk位置] [4:当前栈顶Activity] [5:压测1千次] [c:清除应用数据] [q:退出]"
+        echo "[1:应用日志信息] [2:应用版本信息]  [3:获取应用apk] [4:当前栈顶Activity] [5:压测1千次] [c:清除应用数据] [q:退出]"
         echo -n "input: "
         read number
         if [[ ${number} = "1" ]]
