@@ -3,8 +3,8 @@ set -e
 set -u
 
 
-commonds=("net-tools" "tree" "git" "subversion" "nautilus-share" "gnome-tweak-tool" "openjdk-8-jdk-headless" "ibus ibus-table fcitx-table-wubi")
-install_text=("安装ifconfig" "安装tree" "安装Git" "安装SVN" "安装文件共享" "安装gnome优化软件" "安装openjdk8" "安装五笔输入法 （需要重启生效）")
+commonds=("net-tools" "tree" "git" "subversion" "nautilus-share" "gnome-tweak-tool" "ibus ibus-table fcitx-table-wubi")
+install_text=("安装ifconfig" "安装tree" "安装Git" "安装SVN" "安装文件共享" "安装gnome优化软件" "安装五笔输入法 （需要重启生效）")
 
 for((i=0;i<${#commonds[*]};i++)) 
 do  	
